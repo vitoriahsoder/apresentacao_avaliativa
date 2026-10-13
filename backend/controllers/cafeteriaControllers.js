@@ -41,39 +41,40 @@ async function cadastrarPedido(req, res) {
     }
 }
 
-async function atualizarLivro(req, res) {
+async function atualizarPedido(req, res) {
     try {
         const id = req.params.id;
-        const { titulo, autor, ano } = req.body;
-        if (!titulo || !autor || !ano) {
+        const { data_pedido, valor_total } = req.body;
+        if (!data_pedido || !valor_total) {
             return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
         }
         const [resultado] = await pool.query
-            ("UPDATE livros SET titulo=?, autor=?, ano=? WHERE id=?", [titulo, autor, ano, id]);
+            ("UPDATE cafeteria SET data_pedido=?, valor_total=? WHERE id=?", [data_pedido, valor_total, id]);
 
         if (resultado.affectedRows === 0) {
-            return res.status(404).json({ mensagem: "Livro não encontrado" });
+            return res.status(404).json({ mensagem: "Pedido não encontrado" });
         }
-        res.status(200).json({ mensagem: "Livro atualizado com sucesso" });
+        res.status(200).json({ mensagem: "Pedido atualizado com sucesso" });
 
     } catch (erro) {
-        console.error("Erro ao atualizar livro:", erro);
-        res.status(500).json({ mensagem: "Erro ao atualizar livro" });
+        console.error("Erro ao atualizar pedido:", erro);
+        res.status(500).json({ mensagem: "Erro ao atualizar pedido" });
     }
 }
 
-async function excluirLivro(req, res) {
+async function excluirPedido(req, res) {
     try {
         const id = req.params.id;
-        const [resultado] = await pool.query("DELETE FROM livros WHERE id=?", [id]);
+        const [resultado] = await pool.query("DELETE FROM cafeteria WHERE id=?", [id]);
         if (resultado.affectedRows === 0) {
-            return res.status(404).json({ mensagem: "Livro não encontrado" });
+            return res.status(404).json({ mensagem: "Pedido não encontrado" });
         }
-        res.status(200).json({ mensagem: "Livro excluído com sucesso" });
+        res.status(200).json({ mensagem: "Pedido excluído com sucesso" });
     } catch (erro) {
-        console.error("Erro ao excluir livro:", erro);
-        res.status(500).json({ mensagem: "Erro ao excluir livro" });
+        console.error("Erro ao excluir pedido:", erro);
+        res.status(500).json({ mensagem: "Erro ao excluir pedido" });
     }
 }   
 
-export { listarLivros, cadastrarLivro, atualizarLivro, buscarLivroPorId, excluirLivro };
+export { listarPedidos, cadastrarPedido, atualizarPedido, buscarPedidosPorId, excluirPedido };
+cafeteria
