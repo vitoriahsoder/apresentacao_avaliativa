@@ -1,63 +1,234 @@
+
+/* CONFIGURAÇÕES GERAIS */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f3eee7;
-    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #e8ddca;
+    color: #3b2418;
 }
 
 main {
-    width: 800px;
-    margin: 40px auto;
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
 }
 
-h1 {
+/* SEÇÃO DOS CAFÉS */
+.cafes {
+    padding: 35px 25px 55px;
     text-align: center;
-    color: #5a3e2b;
+    background-color: #e8ddca;
+}
+
+.cafes h1 {
+    font-family: Georgia, serif;
+    font-size: 48px;
+    color: #432717;
+    margin: 0 0 8px;
+}
+
+.subtitulo {
+    color: #806750;
+    font-size: 20px;
+    margin: 0 0 45px;
+}
+
+/* QUATRO CARDS LADO A LADO */
+.lista-cafes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+/* CARD INDIVIDUAL */
+.card-cafe {
+    background-color: #f7efdf;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(65, 39, 22, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.card-cafe:hover {
+    transform: translateY(-5px);
+}
+
+/* IMAGENS DOS CAFÉS */
+.card-cafe img {
+    display: block;
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+/* CONTEÚDO DOS CARDS */
+.conteudo-cafe {
+    padding: 20px 15px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-cafe h2 {
+    font-family: Georgia, serif;
+    font-size: 27px;
+    color: #432717;
+    margin: 4px 0 16px;
+}
+
+.card-cafe p {
+    color: #705844;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 48px;
+    margin: 0 0 22px;
+}
+
+.card-cafe span {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: #70452e;
     margin-bottom: 30px;
 }
 
-button {
-    padding: 10px 20px;
+/* BOTÕES */
+.card-cafe button {
+    background-color: #432717;
+    color: #fffaf2;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 20px;
+    width: 85%;
     font-size: 16px;
     cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    background-color: #6b4f3a;
-    color: white;
+    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #4e3829;
+.card-cafe button:hover {
+    background-color: #765039;
 }
 
-#mensagem {
-    margin-top: 20px;
-    padding: 10px;
+/* GERENCIAMENTO DE PEDIDOS */
+.gerenciamento,
+.cadastro {
+    background-color: #f7efdf;
+    margin: 30px auto;
+    padding: 30px;
+    width: 92%;
+    border-radius: 8px;
 }
 
+.gerenciamento h2,
+.cadastro h2 {
+    color: #432717;
+}
+
+/* TABELA */
 table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
-    background-color: white;
+    margin-top: 20px;
 }
 
 th,
 td {
-    border: 1px solid #cccccc;
-    padding: 10px;
+    padding: 12px;
+    border: 1px solid #d4c1a8;
     text-align: left;
 }
 
 th {
-    background-color: #e8ddd0;
-    color: #4e3829;
+    background-color: #432717;
+    color: white;
 }
 
-tr:hover {
-    background-color: #f7f2ed;
+td {
+    background-color: #fffaf2;
+}
+
+/* FORMULÁRIO */
+#formPedidos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 450px;
+}
+
+#formPedidos input {
+    padding: 10px;
+    border: 1px solid #c5ad94;
+    border-radius: 5px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+#formPedidos button,
+#btnBuscar {
+    background-color: #432717;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#formPedidos button:hover,
+#btnBuscar:hover {
+    background-color: #765039;
+}
+
+/* TABLET */
+@media (max-width: 1000px) {
+    .lista-cafes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card-cafe img {
+        height: 250px;
+    }
+}
+
+/* CELULAR */
+@media (max-width: 550px) {
+    .cafes {
+        padding: 30px 18px;
+    }
+
+    .cafes h1 {
+        font-size: 35px;
+    }
+
+    .subtitulo {
+        font-size: 16px;
+        margin-bottom: 30px;
+    }
+
+    .lista-cafes {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .card-cafe img {
+        height: 260px;
+    }
+
+    .gerenciamento,
+    .cadastro {
+        width: 95%;
+        padding: 15px;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 650px;
+    }
 }

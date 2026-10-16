@@ -38,7 +38,8 @@ CREATE TABLE itens_pedido (
     preco_unitario DECIMAL(10,2) NOT NULL,
 
     FOREIGN KEY (id_pedido)
-        REFERENCES pedidos(id_pedido),
+        REFERENCES pedidos(id_pedido)
+        ON DELETE CASCADE,
 
     FOREIGN KEY (id_produto)
         REFERENCES produtos(id_produto)

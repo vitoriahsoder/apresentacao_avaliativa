@@ -1,187 +1,209 @@
+
 const botao = document.getElementById("btnBuscar");
 const listarPedidos = document.getElementById("listaPedidos");
 const mensagem = document.getElementById("mensagem");
+const formulario = document.getElementById("formPedidos")
+const campoCliente = document.getElementById("id_cliente");     // ID do cliente
+const campoProduto = document.getElementById("id_produtos");    // ID do produto
+const campoData = document.getElementById("data_pedido");       // Data do pedido
+const campoPreco = document.getElementById("valor_total");      // Valor total
+const botaoSalvar = document.getElementById("btnSalvar");
 
-const formulario=document.getElementById("formPedidos");
-const campoNome=document.getElementById("nome");
-const campoDescriao=document.getElementById("descricao");
-const campoPreco=document.getElementById("preco");
-const campoCategoria=document.getElementById("categoria");
+// Altere esta URL se as rotas do backend forem diferentes.
+const API = "http://localhost:3000/cafeteria";
+
+let idEdicao = null;
 
 botao.addEventListener("click", buscarPedidos);
-
-//formulario.addEventListener("submit", cadastrarLivro){;
 formulario.addEventListener("submit", salvarPedido);
 
-let idEdicao=null;
 
-const botaoSalvar=document.getElementById("btnSalvar");
+async function buscarPedidos() {
+    try {
+        mensagem.textContent = "Buscando pedidos...";
 
-formulario.addEventListener("submit", cadastrarPedidos);
+        const resposta = await fetch(API);
 
-async function buscarPedido() {
-    try{
-        mensagem.textContent = "Buscando pedido...";
-        const resposta = await fetch("http://localhost:3000/pedidos");
-        if(!resposta.ok) {
+        if (!resposta.ok) {
             throw new Error("Erro HTTP: " + resposta.status);
         }
+
         const pedidos = await resposta.json();
+        console.log("Dados recebidos da API:", pedidos);
         listarPedidos.innerHTML = "";
-        if(pedidos.length === 0) {
+
+        if (pedidos.length === 0) {
             mensagem.textContent = "Nenhum pedido cadastrado.";
             return;
         }
-        for(let i=0; i<pedidos.length; i++) {
-            listarPedidos.innerHTML += `<tr><td>${pedidos[i].id}</td>
-            <td>${pedidos[i].nome}</td>
-            <td>${pedidos[i].descricao}</td>
-            <td>${pedidos[i].preco}</td>
-            <td>${pedidos[i].categoria}</td>
-            
 
-            <td>
-            <button onClick="editarPedido(${pedidos[i].id})">
-            Editar</button>
+        for (let i = 0; i < pedidos.length; i++) {
+            listarPedidos.innerHTML += `
+                <tr>
+                    <td>${pedidos[i].id_pedido}</td>
+                    <td>${pedidos[i].nome_cliente}</td>
+                    <td>${pedidos[i].nome_produto}</td>
+                    <td>${pedidos[i].descricao ?? ""}</td>
+                    <td>${pedidos[i].data_pedido}</td>
+                    <td>R$ ${pedidos[i].valor_total}</td>
+                    <td>
+                        <button type="button"
+                            onclick="editarPedido(${pedidos[i].id_pedido})">
+                            Editar
+                        </button>
 
-             <button onClick="excluirPedido(${pedidos[i].id})">
-            Excluir</button>
-
-            </tr>`;
+                        <button type="button"
+                            onclick="excluirPedido(${pedidos[i].id_pedido})">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            `;
         }
-        mensagem.textContent = "Pedido encontrados!";
 
-    }catch(erro){
-        mensagem.textContent = "Erro ao buscar pedido: ";
-        console.log("Erro:", erro);
+        mensagem.textContent = "Pedidos encontrados!";
 
+    } catch (erro) {
+        mensagem.textContent = "Erro ao buscar pedidos.";
+        console.error("Erro ao buscar pedidos:", erro);
     }
 }
+
 
 async function salvarPedido(evento) {
     evento.preventDefault();
-    if(idEdicao===null) {
-        await cadastrarPedido(evento);
+
+    if (idEdicao === null) {
+        await cadastrarPedido();
     } else {
-        await atualizarPedido(evento);
+        await atualizarPedido();
     }
+}
 
+function obterDadosFormulario() {
+    return {
+        id_cliente: Number(campoCliente.value),
+        id_produtos: Number(campoProduto.value),
+        data_pedido: campoData.value,
+        valor_total: Number(campoPreco.value)
+    };
+}
 
-//async function cadastrarLivro(evento) {
 async function cadastrarPedido() {
-    //impede o forms recarregar a página
-    //evento.preventDefault();
-    try{
-        const nome=campoTitulo.value;
-        const preco=campoAutor.value;
-        const categoria=campoAno.value;
-        const descricao=campoAno.value;
+    try {
+        const pedido = obterDadosFormulario();
 
-        //objeto para armazenar os dados e organizalos
-        const pedido={nome: nome, preco: preco, categoria: categoria, descricao: descricao}
-        console.log("Pedido enviado:", pedido);
-
-        //enviar para API
-        const resposta = await fetch("http://localhost:3000/pedidos", {
+        const resposta = await fetch(API, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body:  JSON.stringify(pedido) //transformar de js para json
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pedido)
         });
-        if(!resposta.ok) {
+
+        if (!resposta.ok) throw new Error("Erro HTTP: " + resposta.status);
+
+        const dados = await resposta.json();
+        formulario.reset();
+        await buscarPedidos();
+        mensagem.textContent = dados.mensagem || "Pedido cadastrado com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Não foi possível cadastrar o pedido.";
+        console.error("Erro ao cadastrar pedido:", erro);
+    }
+}
+
+async function editarPedido(id) {
+    try {
+        const resposta = await fetch(`${API}/${id}`);
+
+        if (!resposta.ok) {
             throw new Error("Erro HTTP: " + resposta.status);
         }
 
-        const dados=await resposta.json();
-        console.log("Resposta da API:", dados);
+        const pedido = await resposta.json();
+
+        campoCliente.value = pedido.id_cliente ?? "";
+        campoProduto.value = pedido.id_produtos ?? "";
+        
+        
+        if (pedido.data_pedido) {
+            if (pedido.data_pedido.includes("/")) {
+                const partes = pedido.data_pedido.split("/"); 
+                campoData.value = `${partes[2]}-${partes[1]}-${partes[0]}`; 
+            } else {
+                
+                campoData.value = pedido.data_pedido.split("T")[0];
+            }
+        } else {
+            campoData.value = "";
+        }
+        
+
+        campoPreco.value = pedido.valor_total ?? "";
+
+        idEdicao = pedido.id_pedido;
+        botaoSalvar.textContent = "Atualizar";
+
+        mensagem.textContent = `Editando pedido de ID: ${pedido.id_pedido}`;
+    } catch (erro) {
+        mensagem.textContent = "Erro ao buscar pedido para edição.";
+        console.error("Erro ao carregar pedido:", erro);
+    }
+}
+
+async function atualizarPedido() {
+    try {
+        const pedido = obterDadosFormulario();
+
+        const resposta = await fetch(`${API}/${idEdicao}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(pedido)
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Erro HTTP: " + resposta.status);
+        }
+
+        const dados = await resposta.json();
 
         formulario.reset();
+        idEdicao = null;
+        botaoSalvar.textContent = "Cadastrar";
 
         await buscarPedidos();
 
-        //mostra a mensagem retorada pela API
-        mensagem.textContent = dados.mensagem;
-    
-    }catch(erro){
-        mensagem.textContent = 'Não foi possível cadastrar o pedido.';
-        console.log("Erro ao cadastrar pedido:", erro);
+        mensagem.textContent =
+            dados.mensagem || "Pedido atualizado com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Erro ao atualizar pedido.";
+        console.error("Erro ao atualizar pedido:", erro);
     }
 }
-}
-
-    async function editarPedido (id) {
-        try{
-            //buscar pelo id o pedido que vai ser editado
-            const resposta=await fetch("http://localhost:3000/pedidos/" +id);
-            if(!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-            }
-
-            const pedido=await resposta.json();
-
-            campoTitulo.value=pedido.nome;
-            campoAutor.value=pedido.preco;
-            campoAno.value=pedido.categoria;
-            campoAno.value=pedido.descricao;
-
-            idEdicao=pedido.id;
-            botaoSalvar.textContent="Atualizar";
-            mensagem.textContent = "Editando pedido de ID: " + pedido.id;
-        
-        }catch(erro){
-            mensagem.textContent = "Erro ao buscar pedido para edição: ";
-            console.log("Erro ao carregar pedido:", erro);
-        }
-    }
-
-    async function atualizarPedido() {
-        try{
-            const pedido={
-                nome: campoTitulo.value,
-                preco: campoAutor.value,
-                categoria: campoAno.value,
-                descricao: campoAno.value
-            }
-            console.log("Pedido atualizado:", pedido);
-
-            //PUT
-            const resposta=await fetch("http://localhost:3000/pedidos/" + idEdicao, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(pedido)
-            });
-            if(!resposta.ok) {
-                throw new Error("Erro HTTP: " + resposta.status);
-            }
-            const dados=await resposta.json();
-            formulario.reset();
-            idEdicao=null;
-            botaoSalvar.textContent="Cadastrar";
-            await buscarPedidos();
-            mensagem.textContent = dados.mensagem;
-        
-        }catch(erro){
-            mensagem.textContent = "Erro ao atualizar pedido: ";
-            console.log("Erro ao atualizar pedido:", erro);
-        }
-    }
 
 async function excluirPedido(id) {
-    const confirmar = confirm("Tem certeza que deseja excluir este pedido: " + id + "?");
-    if (!confirmar) {
+    if (!confirm(`Tem certeza que deseja excluir o pedido ${id}?`)) {
         return;
     }
+
     try {
-        const resposta = await fetch("http://localhost:3000/pedidos/" + id, {
+        const resposta = await fetch(`${API}/${id}`, {
             method: "DELETE"
         });
-        if(!resposta.ok) {
+
+        if (!resposta.ok) {
             throw new Error("Erro HTTP: " + resposta.status);
         }
+
         const dados = await resposta.json();
+
         await buscarPedidos();
-        mensagem.textContent =dados.mensagem;
-    } catch(erro) {
-        mensagem.textContent = "Erro ao excluir pedido: ";
-        console.log("Erro ao excluir pedido:", erro);
+
+        mensagem.textContent =
+            dados.mensagem || "Pedido excluído com sucesso!";
+    } catch (erro) {
+        mensagem.textContent = "Erro ao excluir pedido.";
+        console.error("Erro ao excluir pedido:", erro);
     }
 }

@@ -1,55 +1,147 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafeteria</title>
+
+    <title>Cafeteria Coffee </title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <main>
-        <h1>Cafeteria</h1>
-        <button id="btnBuscar">Buscar produtos</button>
-        <p id="mensagem"></p>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Preço</th>
-                <th>Categoria</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="listaPedidos"></tbody>
-        </table>
+        <h1>Cafeteria Coffee </h1>
 
-        <section>
-            <h2> Cadastrar Pedido</h2>
-            <form id="formLivro">
-                <label for="nome">Nome</label>
-                <input type="text" id="nome" name="nome" required>
-                <br>
-                <br>
-                <label for="descricao">Descrição</label>
-                <input type="text" id="descricao" name="descricao" required>
-                <br>
-                <br>
-                <label for="preco">Preço</label>
-                <input type="text" id="preco" name="preco" required>
-                <br>
-                <br>
-                <label for="categoria">Categoria</label>
-                <input type="number" id="categoria" name="categoria" required>
-                <br>
-                <br>
-                <button type="submit" id="btnSalvar">Cadastrar</button>
+        <!-- SEÇÃO DOS CAFÉS -->
+        <section class="cafes">
+            <h2>Nossos cafés</h2>
+            <p class="subtitulo">
+                Seu momento especial começa aqui!
+            </p>
 
+            <div class="lista-cafes">
+
+                <div class="card-cafe">
+                    <img src="imagens/cappuccino.jpg"
+                         alt="Cappuccino">
+                    <h3>Cappuccino</h3>
+                    <p>Café cremoso com leite vaporizado.</p>
+                    <span>R$ 12,00</span>
+                    <button type="button"
+                        onclick="fazerPedido('Cappuccino')">
+                        Pedir agora
+                    </button>
+                </div>
+
+                <div class="card-cafe">
+                    <img src="imagens/cafe-gelado.jpg"
+                         alt="Café gelado">
+                    <h3>Café Gelado</h3>
+                    <p>Café refrescante com leite e gelo.</p>
+                    <span>R$ 14,00</span>
+                    <button type="button"
+                        onclick="fazerPedido('Café Gelado')">
+                        Pedir agora
+                    </button>
+                </div>
+
+                <div class="card-cafe">
+                    <img src="imagens/mocha.jpg"
+                         alt="Mocha">
+                    <h3>Mocha</h3>
+                    <p>Uma mistura de café e chocolate.</p>
+                    <span>R$ 15,00</span>
+                    <button type="button"
+                        onclick="fazerPedido('Mocha')">
+                        Pedir agora
+                    </button>
+                </div>
+
+                <div class="card-cafe">
+                    <img src="imagens/espresso.jpg"
+                         alt="Espresso">
+                    <h3>Espresso</h3>
+                    <p>Café intenso para quem ama sabor.</p>
+                    <span>R$ 8,00</span>
+                    <button type="button"
+                        onclick="fazerPedido('Espresso')">
+                        Pedir agora
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- GERENCIAMENTO DE PEDIDOS -->
+        <section class="gerenciamento">
+            <h2>Gerenciamento de Pedidos</h2>
+
+            <button type="button" id="btnBuscar">
+                Buscar Pedidos
+            </button>
+
+            <p id="mensagem"></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Produto</th>
+                        <th>Descrição</th>
+                        <th>Data</th>
+                        <th>Valor Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="listaPedidos"></tbody>
+            </table>
+        </section>
+
+        <!-- CADASTRAR PEDIDO -->
+        <section class="cadastro">
+            <h2>Cadastrar Pedido</h2>
+
+            <form id="formPedidos">
+                <label for="id_cliente">ID do Cliente</label>
+                <input type="number" id="id_cliente"
+                       name="id_cliente" required>
+                <br><br>
+
+                <label for="id_produtos">ID do Produto</label>
+                <input type="number" id="id_produtos"
+                       name="id_produtos" required>
+                <br><br>
+
+                <label for="data_pedido">Data do Pedido</label>
+                <input type="date" id="data_pedido"
+                       name="data_pedido" required>
+                <br><br>
+
+                <label for="valor_total">Valor Total (R$)</label>
+                <input type="number" step="0.01"
+                       id="valor_total" name="valor_total"
+                       required>
+                <br><br>
+
+                <button type="submit" id="btnSalvar">
+                    Cadastrar
+                </button>
             </form>
         </section>
 
     </main>
+
+    <script>
+        function fazerPedido(nomeCafe) {
+            alert("Você escolheu: " + nomeCafe + "!");
+        }
+    </script>
+
     <script src="script.js"></script>
+
 </body>
 </html>
