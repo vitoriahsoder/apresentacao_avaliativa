@@ -3,13 +3,13 @@ const botao = document.getElementById("btnBuscar");
 const listarPedidos = document.getElementById("listaPedidos");
 const mensagem = document.getElementById("mensagem");
 const formulario = document.getElementById("formPedidos")
-const campoCliente = document.getElementById("id_cliente");     // ID do cliente
-const campoProduto = document.getElementById("id_produtos");    // ID do produto
-const campoData = document.getElementById("data_pedido");       // Data do pedido
-const campoPreco = document.getElementById("valor_total");      // Valor total
+const campoCliente = document.getElementById("id_cliente");     
+const campoProduto = document.getElementById("id_produtos");   
+const campoData = document.getElementById("data_pedido");       
+const campoPreco = document.getElementById("valor_total");      
 const botaoSalvar = document.getElementById("btnSalvar");
 
-// Altere esta URL se as rotas do backend forem diferentes.
+
 const API = "http://localhost:3000/cafeteria";
 
 let idEdicao = null;
