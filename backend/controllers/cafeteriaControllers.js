@@ -114,10 +114,10 @@ async function excluirPedidos(req, res) {
     try {
         const id = req.params.id;
 
-        // 1. Apaga primeiro os itens filhos vinculados a esse pedido
+        
         await pool.query("DELETE FROM itens_pedido WHERE id_pedido = ?", [id]);
 
-        // 2. Agora apaga o pedido com segurança
+        
         const [resultado] = await pool.query(
             "DELETE FROM pedidos WHERE id_pedido = ?",
             [id]

@@ -10,7 +10,7 @@ import {testarConexao} from "./database/conexao.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//MIDDLEWARES
+
 app.use(corsMiddleware);
 app.use(express.json());
 
